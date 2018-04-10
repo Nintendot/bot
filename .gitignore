@@ -1,0 +1,6 @@
+.data
+.idea
+runner.sh
+node_modules
+components/routes/_*
+yarn.lock
