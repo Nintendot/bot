@@ -1,18 +1,17 @@
-module.exports = function(controller, web) {
+module.exports = function(controller) {
 
+  const { WebClient } = require('@slack/client');
   const entities = require("entities");
   const custom_msgs = require("../custom_msgs/acronyms");
+  const web = new WebClient(process.env.SLACK_TOKEN);
 
   var acronyms = {};
   var stopWords = ["AND", "THE", "IT", "AS", "AN"];
 
-  // Init Acronym data
-  // TODO: could there be race conditions?
-  web.team.info((err, info) => {
-    if (err) {
-      console.error(err);
-    }
-    // console.log(info);
+  web.team.info()
+  .then((info) => {
+    console.log('Team info response:');
+    console.log(info);
     var teamId = info.team.id;
 
     controller.storage.teams.get(teamId, (error, teams) => {
@@ -23,6 +22,9 @@ module.exports = function(controller, web) {
         acronyms[teamId] = {};
       }
     });
+  })
+  .catch((err) => {
+    console.log('Team info error:' + err);
   });
 
   // Init listening data
