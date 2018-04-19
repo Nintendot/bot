@@ -1,4 +1,5 @@
 module.exports = function(controller, web) {
+
   const entities = require("entities");
   const custom_msgs = require("../custom_msgs/acronyms");
 
@@ -8,7 +9,10 @@ module.exports = function(controller, web) {
   // Init Acronym data
   // TODO: could there be race conditions?
   web.team.info((err, info) => {
-    console.log("init acronym");
+    if (err) {
+      console.error(err);
+    }
+    // console.log(info);
     var teamId = info.team.id;
 
     controller.storage.teams.get(teamId, (error, teams) => {
@@ -26,7 +30,7 @@ module.exports = function(controller, web) {
   var listening = new Set();
   controller.storage.channels.all((error, channels) => {
     console.log('init listening');
-    console.log(channels);
+    // console.log(channels);
     for (var channel of channels) if (channel.listen) listening.add(channel.id);
   });
 
@@ -131,6 +135,7 @@ module.exports = function(controller, web) {
     ],
     directly,
     (bot, message) => {
+      console.log("requesting acronym")
       const teamId = bot.team_info.id;
       const acronym = normaliseAcronym(message.match[1]);
       console.log(`User requested expansion of acronym: '${acronym}'`);
@@ -203,10 +208,12 @@ module.exports = function(controller, web) {
     [/(start|stop|are you) listening/],
     ["mention", "direct_mention"],
     (bot, message) => {
+      
       const request = message.match[1].toLowerCase();
       const channel = message.channel;
       const user = message.user;
-
+      console.log("BCBCBC");
+      console.log("channel:" + channel);
       if (request == "start") {
         console.log(`Start listening on channel ID: ${channel}`);
         listening.add(channel);
@@ -225,13 +232,12 @@ module.exports = function(controller, web) {
           );
         });
       } else if (request == "are you") {
-        controller.storage.team.all((err, allteam_data) => {
+        // console.log(controller.storage.team)
+        controller.storage.teams.all((err, allteam_data) => {
           if (err) {
             console.error(err);
           }
-
-          console.log(allteam_data);
-
+          // console.log(allteam_data);
         });
         bot.reply(
           message,
@@ -257,7 +263,6 @@ module.exports = function(controller, web) {
         saveTeamAcronyms(bot.team_info.id, message.actions[0].name, message.actions[0].value, () => {
             bot.replyInteractive(message, "Thanks! I have saved it");
         });
-
       }
     }
   });

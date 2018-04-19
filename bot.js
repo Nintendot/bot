@@ -1,14 +1,3 @@
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-           ______     ______     ______   __  __     __     ______
-          /\  == \   /\  __ \   /\__  _\ /\ \/ /    /\ \   /\__  _\
-          \ \  __<   \ \ \/\ \  \/_/\ \/ \ \  _"-.  \ \ \  \/_/\ \/
-           \ \_____\  \ \_____\    \ \_\  \ \_\ \_\  \ \_\    \ \_\
-            \/_____/   \/_____/     \/_/   \/_/\/_/   \/_/     \/_/
-
-
-This is a sample Slack bot built with Botkit.
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 const { WebClient } = require('@slack/client');
 
 // An access token (from your Slack app or custom integration - xoxp, xoxb, or xoxa)
@@ -32,14 +21,12 @@ if (!process.env.clientId || !process.env.clientSecret || !process.env.PORT) {
 var Botkit = require('botkit');
 var debug = require('debug')('botkit:main');
 
-var datastoreStorage = require('./storage/datastore')({projectId: 'metrics-195215'});
-
 var bot_options = {
     clientId: process.env.clientId,
     clientSecret: process.env.clientSecret,
     // debug: true,
     // users:read and team:read for slack node sdk
-    scopes: ['bot', 'users:read', 'team:read']
+    scopes: ['bot', 'team:read']
     // storage: datastoreStorage
 };
 
@@ -50,13 +37,6 @@ bot_options.json_file_store = __dirname + '/.data/db/'; // store user data in a 
 var controller = Botkit.slackbot(bot_options);
 
 controller.startTicking();
-
-// controller.storage.teams.get(bot.team_info.id, (error, data) => {
-//   if (data !== undefined && data.acronyms !== undefined)
-//       acronyms[bot.team_info.id] = data.acronyms;
-//   else
-//       acronyms[bot.team_info.id] = {};
-// });
 
 // Set up an Express-powered webserver to expose oauth and webhook endpoints
 var webserver = require(__dirname + '/components/express_webserver.js')(controller);
@@ -72,17 +52,3 @@ var normalizedPath = require("path").join(__dirname, "skills");
 require("fs").readdirSync(normalizedPath).forEach(function(file) {
   require("./skills/" + file)(controller, web);
 });
-
-
-//Note:
-// Need 'users:read' for the slack sdk api to get web.users.info
-/*
- scopes:
-   [ 'identify',
-     'bot',
-     'channels:history',
-     'groups:history',
-     'im:history',
-     'mpim:history' ],
-  acceptedScopes: [ 'users:read', 'team:read' ] }
-*/

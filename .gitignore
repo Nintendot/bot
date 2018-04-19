@@ -1,6 +1,7 @@
 .data
-.idea
 runner.sh
+tmp
 node_modules
 components/routes/_*
 yarn.lock
+todos.md
