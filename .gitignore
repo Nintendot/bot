@@ -6,3 +6,4 @@ components/routes/_*
 yarn.lock
 todos.md
 lib
+.env
