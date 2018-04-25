@@ -1,10 +1,13 @@
 {
-  "name": "Bot",
+  "name": "acronymns-bot",
   "version": "1.0.0",
   "description": "Bot",
-  "main": "bot.js",
+  "main": "lib/main.js",
   "scripts": {
-    "start": "node bot.js"
+    "build": "babel ./src -d lib --copy-files --ignore __mocks__,*.spec.js",
+    "start": "node ./lib/main.js",
+    "dev": "nodemon --watch src --exec \"npm run build && npm run start\"",
+    "test": "jest --watchAll"
   },
   "dependencies": {
     "@slack/client": "^4.1.0",
@@ -12,7 +15,22 @@
     "botkit": "^0.6.13",
     "debug": "^3.1.0",
     "entities": "^1.1.1",
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "node-env-file": "^0.1.8"
   },
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-jest": "^22.4.3",
+    "babel-preset-env": "^1.6.1",
+    "jest": "^22.4.3",
+    "nodemon": "^1.17.3"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "rootDir": "./src"
+  }
 }

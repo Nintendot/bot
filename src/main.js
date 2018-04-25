@@ -1,18 +1,8 @@
-// An access token (from your Slack app or custom integration - xoxp, xoxb, or xoxa)
-const token = process.env.SLACK_TOKEN;
 
-if (!process.env.SLACK_TOKEN) {
-  console.error("Missing slack token");
-  process.exit(1);
-}
+const path = require('path')
+const env = require('node-env-file')
+env(path.join(__dirname, '../' , '.env'))
 
-// env(__dirname + '/.env');
-
-
-if (!process.env.clientId || !process.env.clientSecret || !process.env.PORT) {
-  console.log('Error: Specify clientId clientSecret and PORT in environment');
-  process.exit(1);
-}
 
 var Botkit = require('botkit');
 var debug = require('debug')('botkit:main');
@@ -46,5 +36,5 @@ require(__dirname + '/components/onboarding.js')(controller);
 
 var normalizedPath = require("path").join(__dirname, "skills");
 require("fs").readdirSync(normalizedPath).forEach(function(file) {
-  require("./skills/" + file)(controller);
+  require("./skills/acronyms")(controller);
 });
