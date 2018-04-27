@@ -77,8 +77,8 @@ export default class Acronym {
     return await this.adapter.exist(this.title);
   }
 
-  async read() {
-    return this.adapter.read({ teamId: this.teamId, title: this.title });
+  async read(failSafe=false) {
+    return this.adapter.read({ teamId: this.teamId, title: this.title }, failSafe);
   }
 
   async save({ value, user }) {

@@ -24,7 +24,7 @@ export default adapter => controller => {
             return Object.assign({}, item, {creator: user.name});
           })
         );
-        const formattedMsg = 'Here are the results I found:\n' + msgs.map(m => `*${m.defination}* by <@${m.creator}>`).join('\n');
+        const formattedMsg = 'Here are the results I found:\n' + msgs.map(m => `_${m.defination}_ by <@${m.creator}>`).join('\n');
         bot.reply(
           message,
           formattedMsg
@@ -32,26 +32,6 @@ export default adapter => controller => {
       } catch (e) {
         bot.reply(message, e.message);
       }
-
-      // console.log(acronymData)
-
-      // console.log("requesting acronym")
-      // const teamId = bot.team_info.id;
-      // const acronym = normaliseAcronym(message.match[1]);
-      // console.log(`User requested expansion of acronym: '${acronym}'`);
-
-      // if (acronyms[teamId].hasOwnProperty(acronym)) {
-      //   bot.reply(
-      //     message,
-      //     `'${acronym}' stands for '${acronyms[teamId][acronym]}'`
-      //   );
-      // } else {
-      //   console.log(`Acronym '${acronym}' not found.`);
-      //   bot.reply(
-      //     message,
-      //     `Nothing has been defined for '${acronym}' yet :disappointed:`
-      //   );
-      // }
     }
   );
 };

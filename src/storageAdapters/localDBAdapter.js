@@ -37,10 +37,14 @@ export default class LocalDBAdapter {
     );
     return this._dbSave(updateData);
   }
-  async read({ teamId, title }) {
+  async read({ teamId, title }, failSafe=false) {
     const data = await this._dbRead(teamId);
     if (!this.exist(data, ['acronymsCollection', title])) {
-      throw new Error(`I don't understand \`${title}\` :disappointed:`);
+      if(failSafe) {
+        return undefined;
+      } else {
+        throw new Error(`I don't understand \`${title}\` :disappointed:`);
+      }
     }
     return get(data, ['acronymsCollection', title]);
   }
