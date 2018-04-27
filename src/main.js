@@ -1,4 +1,4 @@
-
+import acronyms from './skills/acronyms';
 const path = require('path')
 const env = require('node-env-file')
 env(path.join(__dirname, '../' , '.env'))
@@ -17,7 +17,7 @@ var bot_options = {
 };
 
 // Flip the storage option
-bot_options.json_file_store = __dirname + '/.data/db/'; // store user data in a simple JSON format
+bot_options.json_file_store = __dirname + '/../.data/db/'; // store user data in a simple JSON format
 
 // Create the Botkit controller, which controls all instances of the bot.
 var controller = Botkit.slackbot(bot_options);
@@ -33,8 +33,9 @@ require(__dirname + '/components/user_registration.js')(controller);
 
 // Send an onboarding message when a new team joins
 require(__dirname + '/components/onboarding.js')(controller);
-
-var normalizedPath = require("path").join(__dirname, "skills");
-require("fs").readdirSync(normalizedPath).forEach(function(file) {
-  require("./skills/acronyms")(controller);
-});
+acronyms(controller)
+// require(__dirname + '/skills/acronyms.js')(controller);
+// var normalizedPath = require("path").join(__dirname, "skills");
+// require("fs").readdirSync(normalizedPath).forEach(function(file) {
+//   require("./skills/acronyms")(controller);
+// });

@@ -78,14 +78,15 @@ export default class Acronym {
   }
 
   async read() {
-    return this.adapter.read(this.title);
+    return this.adapter.read({ teamId: this.teamId, title: this.title });
   }
 
-  async save(value) {
+  async save({ value, user }) {
     return this.adapter.save({
-      team: this.teamId,
+      teamId: this.teamId,
       title: this.title,
-      value: Acronym.decode(value)
+      value: Acronym.decode(value),
+      user
     });
   }
 

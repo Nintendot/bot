@@ -1,23 +1,15 @@
+import Acronym from '../models/Acronym';
+
 export default controller => {
   controller.hears(
     [
       /(?:\W)?([A-Za-z0-9\.]+)(?:\W)? (?:means|stands for) (?:\W)?(.+?)(?:\W)?$/
     ],
-    directly,
+    ['direct_message', 'mention', 'direct_mention'],
     (bot, message) => {
-      const teamId = bot.team_info.id;
-      const acronym = normaliseAcronym(message.match[1]);
-      const expansion = entities.decodeHTML(message.match[2]);
-
-      if (acronyms[teamId].hasOwnProperty(acronym)) {
-        console.log(`Acronym '${acronym}' already defined!`);
-        bot.reply(
-          message,
-          `Sorry! '${acronym}' has already been defined! Feel free to update it, though.`
-        );
-      } else {
-        bot.reply(message, custom_msgs.defineAcronym(acronym, expansion));
-      }
+      const title = message.match[1];
+      const value = message.match[2];
+      bot.reply(message, Acronym.getDefineMsg(title, value));
     }
   );
 };
