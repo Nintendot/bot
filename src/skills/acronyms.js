@@ -3,7 +3,7 @@ import { WebClient } from '@slack/client';
 import interactiveMsgCallback from './interactiveMsgCallback';
 import listenForActions from './listenForActions';
 import listenForAmbient from './listenForAmbient';
-import listenForDefination from './listenForDefination';
+import listenForDefinition from './listenForDefinition';
 import listenForDeletion from './listenForDeletion';
 import listenForQuestion from './listenForQuestion';
 import listenForUpdate from './listenForUpdate';
@@ -23,9 +23,9 @@ export default (controller) => {
 
   // Listening
   // listenForUpdate(controller);
-  // listenForActions(controller);
+  listenForActions(controller, listening);
   listenForAmbient(adapter)(controller);
-  listenForDefination(controller);
+  listenForDefinition(controller);
   // listenForDeletion(controller);
   listenForQuestion(adapter)(controller);
   // Interactive msg
