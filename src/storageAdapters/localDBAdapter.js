@@ -15,7 +15,7 @@ export default class LocalDBAdapter {
   }
 
   async save({ teamId, title, value, user }) {
-    const newAcronym = { creator: user, defination: value };
+    const newAcronym = { creator: user, definition: value };
     const data = await this._dbRead(teamId);
     // If exist
     if (this.exist(data, ['acronymsCollection', title])) {
