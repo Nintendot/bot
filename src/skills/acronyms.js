@@ -26,7 +26,7 @@ export default (controller) => {
   listenForActions(controller, listening);
   listenForAmbient(adapter)(controller);
   listenForDefinition(controller);
-  // listenForDeletion(controller);
+  listenForDeletion(adapter)(controller);
   listenForQuestion(adapter)(controller);
   // Interactive msg
   interactiveMsgCallback(adapter)(controller);

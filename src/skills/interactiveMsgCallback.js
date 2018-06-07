@@ -25,15 +25,27 @@ export default adapter => controller => {
         }
       }
     }
-    // else if (message.callback_id === "remove_acronym") {
-    //   console.log(message.actions);
-    //   if (message.actions[0].value === "no") {
-    //     bot.replyInteractive(message, ":ok_hand:, I won't delete anything");
-    //   } else {
-    //     deleteAcronym(bot.team_info.id, message.actions[0].name, () => {
-    //         bot.replyInteractive(message, "Alright! I have removed it");
-    //     });
-    //   }
-    // }
+    else if (message.callback_id === "remove_acronym") {
+
+      if (message.actions[0].value === "no") {
+          bot.replyInteractive(message, ":ok_hand:, I won't delete anything");
+      } else if (message.actions[0].value === "yes") {
+        try {
+          
+          const acronym = new Acronym({
+            title: message.actions[0].name,
+            teamId: bot.team_info.id,
+            adapter
+          });
+
+          await acronym.delete({
+            user: message.user
+          });
+          bot.replyInteractive(message, `Thanks <@${message.user}>, I deleted your definition of ${message.actions[0].name}`);
+        } catch(e) {
+          bot.replyInteractive(message, e.message);
+        }
+      }
+    }
   });
 };

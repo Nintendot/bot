@@ -15,12 +15,12 @@ export default class Acronym {
     return title.replace(/\W/g, '').toUpperCase();
   }
 
-  static getDefineMsg(title, value) {
+  static getDefineMsg(user, title, value) {
     return {
       attachments: [
         {
           title: `Defining: ${title}`,
-          text: `Are you sure ${title} means: ${value}?`,
+          text: `Hi <@${user}>, are you sure ${title} means: ${value}?`,
           fallback: 'Oops, looks like something went south...',
           callback_id: 'define_acronym',
           color: '#3AA3E3',
@@ -44,12 +44,12 @@ export default class Acronym {
     };
   }
 
-  static getDeleteMsg(title, value) {
+  static getDeleteMsg(user, title) {
     return {
       attachments: [
         {
           title: `Removing: ${title}`,
-          text: `Are you sure you want to remove ${title}, which currently means: ${value}?`,
+          text: `Hi <@${user}>, sure you want to remove ${title}`,
           fallback: 'Oops, looks like something went south...',
           callback_id: 'remove_acronym',
           color: '#3AA3E3',
@@ -59,7 +59,7 @@ export default class Acronym {
               name: title,
               text: 'Yes',
               type: 'button',
-              value: value
+              value: 'yes'
             },
             {
               name: 'No',
@@ -90,7 +90,11 @@ export default class Acronym {
     });
   }
 
-  async delete() {
-    return this.adapter.delete({ teamId: this.teamId, title: this.title });
+  async delete({ user }) {
+    return this.adapter.delete({ 
+      teamId: this.teamId, 
+      title: this.title,
+      user
+    });
   }
 }

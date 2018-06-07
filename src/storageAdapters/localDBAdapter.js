@@ -2,6 +2,7 @@ import util from 'util';
 import get from 'lodash/get';
 import set from 'lodash/set';
 import has from 'lodash/has';
+import remove from 'lodash/remove';
 
 export default class LocalDBAdapter {
   constructor(db) {
@@ -37,6 +38,7 @@ export default class LocalDBAdapter {
     );
     return this._dbSave(updateData);
   }
+
   async read({ teamId, title }, failSafe=false) {
     const data = await this._dbRead(teamId);
     if (!this.exist(data, ['acronymsCollection', title])) {
@@ -48,5 +50,27 @@ export default class LocalDBAdapter {
     }
     return get(data, ['acronymsCollection', title]);
   }
-  async delete({ title, creator }) {}
+
+  async delete({teamId, title, user }) {
+    const data = await this._dbRead(teamId);
+    // If exists
+    if (this.exist(data, ['acronymsCollection', title])) {
+      const acronymsAry = get(data, ['acronymsCollection', title]);
+      if (acronymsAry.some(a => a.creator === user)) {
+        remove(acronymsAry, (ele) => {
+          return ele.creator === user;
+        });
+        if (acronymsAry.length == 0) { // no more definitions
+          delete data.acronymsCollection[title];
+        }
+        return this._dbSave(data);
+      } else {
+        // not found
+        throw new Error(`I don't think <@${creator}> has defined \`${title}\` :disappointed:`);
+      }
+    } else {
+      throw new Error(`I don't think <@${user}> has defined \`${title}\` :disappointed:`);
+    }
+  }
+  
 }

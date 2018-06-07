@@ -24,7 +24,7 @@ export default adapter => controller => {
             return Object.assign({}, item, {creator: user.name});
           })
         );
-        const formattedMsg = 'Here are the results I found:\n' + msgs.map(m => `_${m.defination}_ by <@${m.creator}>`).join('\n');
+        const formattedMsg = 'Here are the results I found:\n' + msgs.map(m => `_${m.definition}_ by <@${m.creator}>`).join('\n');
         bot.reply(
           message,
           formattedMsg

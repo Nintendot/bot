@@ -9,7 +9,8 @@ export default controller => {
     (bot, message) => {
       const title = message.match[1];
       const value = message.match[2];
-      bot.reply(message, Acronym.getDefineMsg(title, value));
+      const user = message.user;
+      bot.reply(message, Acronym.getDefineMsg(user, title, value));
     }
   );
 };
