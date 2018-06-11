@@ -1,18 +1,8 @@
-// An access token (from your Slack app or custom integration - xoxp, xoxb, or xoxa)
-const token = process.env.SLACK_TOKEN;
+import acronyms from './skills/acronyms';
+const path = require('path')
+const env = require('node-env-file')
+env(path.join(__dirname, '../' , '.env'))
 
-if (!process.env.SLACK_TOKEN) {
-  console.error("Missing slack token");
-  process.exit(1);
-}
-
-// env(__dirname + '/.env');
-
-
-if (!process.env.clientId || !process.env.clientSecret || !process.env.PORT) {
-  console.log('Error: Specify clientId clientSecret and PORT in environment');
-  process.exit(1);
-}
 
 var Botkit = require('botkit');
 var debug = require('debug')('botkit:main');
@@ -27,7 +17,7 @@ var bot_options = {
 };
 
 // Flip the storage option
-bot_options.json_file_store = __dirname + '/.data/db/'; // store user data in a simple JSON format
+bot_options.json_file_store = __dirname + '/../.data/db/'; // store user data in a simple JSON format
 
 // Create the Botkit controller, which controls all instances of the bot.
 var controller = Botkit.slackbot(bot_options);
@@ -43,8 +33,9 @@ require(__dirname + '/components/user_registration.js')(controller);
 
 // Send an onboarding message when a new team joins
 require(__dirname + '/components/onboarding.js')(controller);
-
-var normalizedPath = require("path").join(__dirname, "skills");
-require("fs").readdirSync(normalizedPath).forEach(function(file) {
-  require("./skills/" + file)(controller);
-});
+acronyms(controller)
+// require(__dirname + '/skills/acronyms.js')(controller);
+// var normalizedPath = require("path").join(__dirname, "skills");
+// require("fs").readdirSync(normalizedPath).forEach(function(file) {
+//   require("./skills/acronyms")(controller);
+// });
