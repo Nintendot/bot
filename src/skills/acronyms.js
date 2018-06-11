@@ -22,7 +22,7 @@ export default (controller) => {
 
 
   // Listening
-  // listenForUpdate(controller);
+  listenForUpdate(adapter)(controller);
   listenForActions(controller, listening);
   listenForAmbient(adapter)(controller);
   listenForDefinition(controller);

@@ -3,6 +3,7 @@ import get from 'lodash/get';
 import set from 'lodash/set';
 import has from 'lodash/has';
 import remove from 'lodash/remove';
+import find from 'lodash/find';
 
 export default class LocalDBAdapter {
   constructor(db) {
@@ -15,28 +16,37 @@ export default class LocalDBAdapter {
     return has(data, path);
   }
 
-  async save({ teamId, title, value, user }) {
+  async save({ teamId, title, value, user, overwrite}) {
     const newAcronym = { creator: user, definition: value };
     const data = await this._dbRead(teamId);
-    // If exist
-    if (this.exist(data, ['acronymsCollection', title])) {
-      const acronymsAry = get(data, ['acronymsCollection', title]);
-      if (acronymsAry.some(a => a.creator === user)) {
-        throw new Error(
-          `It seems like you have already defined ${title}. Please use the update command to update the value.`
-        );
+
+      // If exist
+      if (this.exist(data, ['acronymsCollection', title])) {
+        const acronymsAry = get(data, ['acronymsCollection', title]);
+        if (acronymsAry.some(a => a.creator === user)) {
+          if (overwrite) { // Update
+            const found = find(acronymsAry, ele => {
+              return ele.creator === user;
+            })
+            found.definition = value;  
+            return this._dbSave(data);
+          } else { // Define
+            throw new Error(
+              `It seems like you have already defined ${title}. Please use the update command to update the value.`
+            );
+          }
+        }
+        // if user definition not found
+        acronymsAry.push(newAcronym);
+        return this._dbSave(data);
       }
-      // if user definition not found
-      acronymsAry.push(newAcronym);
-      return this._dbSave(data);
-    }
-    // If doesn't exist
-    const updateData = set(
-      data,
-      ['acronymsCollection', title, '0'],
-      newAcronym
-    );
-    return this._dbSave(updateData);
+      // If doesn't exist
+      const updateData = set(
+        data,
+        ['acronymsCollection', title, '0'],
+        newAcronym
+      );
+      return this._dbSave(updateData);
   }
 
   async read({ teamId, title }, failSafe=false) {
@@ -72,5 +82,5 @@ export default class LocalDBAdapter {
       throw new Error(`I don't think <@${user}> has defined \`${title}\` :disappointed:`);
     }
   }
-  
+
 }

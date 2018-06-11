@@ -6,7 +6,7 @@ export default adapter => controller => {
       if (message.actions[0].value === 'no') {
         bot.replyInteractive(
           message,
-          ':ok_hand:, once you figured it out, let me know'
+          ':ok_hand: once you figure it out, let me know'
         );
       } else {
         const acronym = new Acronym({
@@ -17,7 +17,8 @@ export default adapter => controller => {
         try {
           await acronym.save({
             value: message.actions[0].value,
-            user: message.user
+            user: message.user,
+            overwrite: false
           });
           bot.replyInteractive(message, 'Thanks! I have saved it.');
         } catch(e) {
@@ -28,7 +29,7 @@ export default adapter => controller => {
     else if (message.callback_id === "remove_acronym") {
 
       if (message.actions[0].value === "no") {
-          bot.replyInteractive(message, ":ok_hand:, I won't delete anything");
+          bot.replyInteractive(message, ":ok_hand: I won't delete anything");
       } else if (message.actions[0].value === "yes") {
         try {
           
@@ -42,6 +43,30 @@ export default adapter => controller => {
             user: message.user
           });
           bot.replyInteractive(message, `Thanks <@${message.user}>, I deleted your definition of ${message.actions[0].name}`);
+        } catch(e) {
+          bot.replyInteractive(message, e.message);
+        }
+      }
+    }
+    else if (message.callback_id === 'update_acronym') {
+      if (message.actions[0].value === 'no') {
+        bot.replyInteractive(
+          message,
+          ':ok_hand: once you figure it out, let me know'
+        );
+      } else {
+        const acronym = new Acronym({
+          title: message.actions[0].name,
+          teamId: bot.team_info.id,
+          adapter
+        });
+        try {
+          await acronym.save({
+            value: message.actions[0].value,
+            user: message.user,
+            overwrite: true
+          });
+          bot.replyInteractive(message, 'Thanks! I have saved it.');
         } catch(e) {
           bot.replyInteractive(message, e.message);
         }

@@ -73,6 +73,35 @@ export default class Acronym {
     };
   }
 
+  static getUpdateMsg(user, title, value) {
+    return {
+      attachments: [
+        {
+          title: `Updating: ${title}`,
+          text: `Hi <@${user}>, sure you want to update ${title} to mean ${value}?`,
+          fallback: 'Oops, looks like something went south...',
+          callback_id: 'update_acronym',
+          color: '#3AA3E3',
+          attachment_type: 'default',
+          actions: [
+            {
+              name: title,
+              text: 'Yes',
+              type: 'button',
+              value: value
+            },
+            {
+              name: 'No',
+              text: 'No',
+              type: 'button',
+              value: 'no'
+            }
+          ]
+        }
+      ]
+    };
+  }
+
   async exist() {
     return await this.adapter.exist(this.title);
   }
@@ -81,12 +110,13 @@ export default class Acronym {
     return this.adapter.read({ teamId: this.teamId, title: this.title }, failSafe);
   }
 
-  async save({ value, user }) {
+  async save({ value, user, overwrite}) {
     return this.adapter.save({
       teamId: this.teamId,
       title: this.title,
       value: Acronym.decode(value),
-      user
+      user,
+      overwrite
     });
   }
 
