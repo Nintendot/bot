@@ -30,6 +30,19 @@ export default analytics_adapter => adapter => controller => {
           const result = await Promise.all(acronymPromises);
           const resultWithTitle = result.map((r, index) => ({title: nouns[index], definitions: r}));
           const filteredResult = resultWithTitle.filter(t => !isUndefined(t.definitions));
+
+          // analytics
+          filteredResult.forEach(async result => {
+            try {
+              await analytics.save({
+                action: 'ambient',
+                found: true,
+                value: result.title.toUpperCase()
+              })
+            } catch (e) {
+              console.error(`Analytics error:`, e);
+            }
+          })
           const getUser = util.promisify(bot.api.users.info);
           const sendMsg = async (result) => {
             try {
