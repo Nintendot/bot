@@ -11,17 +11,15 @@ export default analytics_adapter => adapter => controller => {
     ],
     ['direct_message', 'mention', 'direct_mention'],
     async (bot, message) => {
-      const analytics = new Analytics({
-        teamId: bot.team_info.id,
-        adapter: analytics_adapter
-      });
-
       const getUser = util.promisify(bot.api.users.info);
-  
       const acronym = new Acronym({
         title: message.match[1],
         teamId: bot.team_info.id,
         adapter
+      });
+      const analytics = new Analytics({
+        adapter: analytics_adapter,
+        message
       });
       try {
         const acronymData = await acronym.read();
@@ -36,17 +34,23 @@ export default analytics_adapter => adapter => controller => {
           message,
           formattedMsg
         );
+
+        // analytics - found result
+        try {
+          await analytics.save({
+            action: 'question',
+            found: true
+          })
+        } catch (e) {
+          console.error(`Analytics error:`, e);
+        }
+        
       } catch (e) {
         bot.reply(message, e.message);
 
-        // analytics
+        // analytics - no result
         try {
-          console.log(analytics.adapter);
           await analytics.save({
-            channel: message.channel,
-            user: message.user,
-            method: message.type,
-            acronym: message.match[1],
             action: 'question',
             found: false
           })

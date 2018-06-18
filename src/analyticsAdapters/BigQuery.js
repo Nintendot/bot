@@ -15,8 +15,7 @@ export default class BigQuery {
         .table(this.table)
         .insert(data)
         .then(() => {
-            console.log(`Analytics: data added from ${data.channel} by ${data.user}`);
-
+            console.log(`Analytics: data added from ${data.channel} by ${data.user} on acronym ${data.acronym}, action: ${data.action}`);
         })
         .catch(err => {
             if (err && err.name === 'PartialFailureError') {

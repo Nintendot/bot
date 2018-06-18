@@ -33,7 +33,7 @@ export default class Acronym {
               value: value
             },
             {
-              name: 'No',
+              name: title,
               text: 'No',
               type: 'button',
               value: 'no'
@@ -62,7 +62,7 @@ export default class Acronym {
               value: 'yes'
             },
             {
-              name: 'No',
+              name: title,
               text: 'No',
               type: 'button',
               value: 'no'
@@ -91,7 +91,7 @@ export default class Acronym {
               value: value
             },
             {
-              name: 'No',
+              name: title,
               text: 'No',
               type: 'button',
               value: 'no'

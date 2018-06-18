@@ -24,12 +24,12 @@ export default (controller) => {
 
 
   // Listening
-  listenForUpdate(adapter)(controller);
+  listenForUpdate(analytics_adapter)(controller);
   listenForActions(controller, listening);
-  listenForAmbient(adapter)(controller);
-  listenForDefinition(controller);
-  listenForDeletion(adapter)(controller);
+  listenForAmbient(analytics_adapter)(adapter)(controller);
+  listenForDefinition(analytics_adapter)(controller);
+  listenForDeletion(analytics_adapter)(controller);
   listenForQuestion(analytics_adapter)(adapter)(controller);
   // Interactive msg
-  interactiveMsgCallback(adapter)(controller);
+  interactiveMsgCallback(analytics_adapter)(adapter)(controller);
 };

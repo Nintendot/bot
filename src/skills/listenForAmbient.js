@@ -2,9 +2,14 @@ import nlp from 'compromise';
 import util from 'util';
 import isUndefined from 'lodash/isUndefined';
 import Acronym from '../models/Acronym';
+import Analytics from '../models/Analytics';
 
-export default adapter => controller => {
+export default analytics_adapter => adapter => controller => {
   controller.on('ambient', async (bot, message) => {
+    const analytics = new Analytics({
+      adapter: analytics_adapter,
+      message
+    });
     const channel = message.channel;
     const user = message.user;
     controller.storage.channels.get(channel, async (err, channel_data) => {
