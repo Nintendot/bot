@@ -55,7 +55,7 @@ export default class LocalDBAdapter {
       if(failSafe) {
         return undefined;
       } else {
-        throw new Error(`I don't understand \`${title}\` :disappointed:`);
+        throw new Error(`:disappointed: I don't understand \`${title}\` yet, perhaps you could help me with it? \n :nerd_face: Teach me by typing \`\`\`@Botcronym ${title} means (definition)\`\`\``);
       }
     }
     return get(data, ['acronymsCollection', title]);
@@ -76,10 +76,10 @@ export default class LocalDBAdapter {
         return this._dbSave(data);
       } else {
         // not found
-        throw new Error(`I don't think <@${creator}> has defined \`${title}\` :disappointed:`);
+        throw new Error(`:disappointed: I don't think <@${user}> has defined \`${title}\``);
       }
     } else {
-      throw new Error(`I don't think <@${user}> has defined \`${title}\` :disappointed:`);
+      throw new Error(`:disappointed: I don't think <@${user}> has defined \`${title}\``);
     }
   }
 

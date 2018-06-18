@@ -13,7 +13,7 @@ export default analytics_adapter => adapter => controller => {
       if (message.actions[0].value === 'no') {
         bot.replyInteractive(
           message,
-          ':ok_hand: once you figure it out, let me know'
+          `:ok_hand: no worries <@${message.user}>, once you figure it out, please let me know :spock-hand:`
         );
         try {
           await analytics.save({
@@ -36,7 +36,7 @@ export default analytics_adapter => adapter => controller => {
             user: message.user,
             overwrite: false
           });
-          bot.replyInteractive(message, 'Thanks! I have saved it.');
+          bot.replyInteractive(message, `:heart: Thanks <@${message.user}>, I saved your definition of ${message.actions[0].name} :raised_hands:`);
           try {
             await analytics.save({
               action: 'define_confirm',
@@ -54,7 +54,7 @@ export default analytics_adapter => adapter => controller => {
     else if (message.callback_id === "remove_acronym") {
 
       if (message.actions[0].value === "no") {
-          bot.replyInteractive(message, ":ok_hand: I won't delete anything");
+          bot.replyInteractive(message, `:ok_hand: <@${message.user}> I won't delete anything :relaxed:`);
           try {
           await analytics.save({
             action: 'remove_cancel',
@@ -75,7 +75,7 @@ export default analytics_adapter => adapter => controller => {
           await acronym.delete({
             user: message.user
           });
-          bot.replyInteractive(message, `Thanks <@${message.user}>, I deleted your definition of ${message.actions[0].name}`);
+          bot.replyInteractive(message, `:+1: Thanks <@${message.user}>, I deleted your definition of ${message.actions[0].name} :v:`);
           try {
             await analytics.save({
               action: 'remove_confirm',
@@ -94,7 +94,7 @@ export default analytics_adapter => adapter => controller => {
       if (message.actions[0].value === 'no') {
         bot.replyInteractive(
           message,
-          ':ok_hand: once you figure it out, let me know'
+          `:ok_hand: no worries <@${message.user}>, once you figure it out, please let me know :the_horns:`
         );
         try {
           await analytics.save({
@@ -117,7 +117,7 @@ export default analytics_adapter => adapter => controller => {
             user: message.user,
             overwrite: true
           });
-          bot.replyInteractive(message, 'Thanks! I have saved it.');
+          bot.replyInteractive(message, `:i_love_you_hand_sign: Thanks <@${message.user}>, I updated your definition of ${message.actions[0].name} :v:`);
           try {
             await analytics.save({
               action: 'update_confirm',
