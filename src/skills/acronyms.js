@@ -8,10 +8,12 @@ import listenForDeletion from './listenForDeletion';
 import listenForQuestion from './listenForQuestion';
 import listenForUpdate from './listenForUpdate';
 
+import Bigquery from '../analyticsAdapters/BigQuery';
 import localDBAdapter from '../storageAdapters/localDBAdapter';
 
 export default (controller) => {
   const adapter = new localDBAdapter(controller.storage.teams)
+  const analytics_adapter = new Bigquery();
   // const web = new WebClient(process.env.slackToken);
 
   var listening = new Set();
@@ -27,7 +29,7 @@ export default (controller) => {
   listenForAmbient(adapter)(controller);
   listenForDefinition(controller);
   listenForDeletion(adapter)(controller);
-  listenForQuestion(adapter)(controller);
+  listenForQuestion(analytics_adapter)(adapter)(controller);
   // Interactive msg
   interactiveMsgCallback(adapter)(controller);
 };
