@@ -9,12 +9,13 @@ import listenForQuestion from './listenForQuestion';
 import listenForUpdate from './listenForUpdate';
 import listenForSlash from './listenForSlash';
 
-import Bigquery from '../analyticsAdapters/BigQuery';
+//import Bigquery from '../analyticsAdapters/BigQuery';
+import localAnalytics from '../analyticsAdapters/localAnalytics';
 import localDBAdapter from '../storageAdapters/localDBAdapter';
 
 export default (controller) => {
   const adapter = new localDBAdapter(controller.storage.teams)
-  const analytics_adapter = new Bigquery();
+  const analytics_adapter = new localAnalytics();
   // const web = new WebClient(process.env.slackToken);
 
   var listening = new Set();

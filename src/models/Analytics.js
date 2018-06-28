@@ -1,8 +1,6 @@
 import moment from 'moment';
 import entities from 'entities';
 
-const timestamp = moment.utc().format();
-
 export default class Analytics {
   constructor({adapter, message}) {
     this.adapter = adapter;
@@ -27,7 +25,7 @@ export default class Analytics {
       acronym: value || Analytics.decode(this.message.match[1]),
       action,
       found,
-      timestamp
+      timestamp: this.message.event_time? moment.unix(this.message.event_time).format("YYYY-MM-DD hh:mm:ss") : moment.unix(this.message.action_ts.split('.')[0]).format("YYYY-MM-DD hh:mm:ss")
     });
   }
 }
