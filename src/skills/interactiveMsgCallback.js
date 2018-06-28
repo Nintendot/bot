@@ -1,13 +1,29 @@
 import Acronym from '../models/Acronym';
+import Analytics from '../models/Analytics';
 
-export default adapter => controller => {
+export default analytics_adapter => adapter => controller => {
+  
   controller.on('interactive_message_callback', async (bot, message) => {
+    const analytics = new Analytics({
+      adapter: analytics_adapter,
+      message
+    });
+
     if (message.callback_id === 'define_acronym') {
       if (message.actions[0].value === 'no') {
         bot.replyInteractive(
           message,
-          ':ok_hand: once you figure it out, let me know'
+          `:ok_hand: no worries <@${message.user}>, once you figure it out, please let me know :spock-hand:`
         );
+        try {
+          await analytics.save({
+            action: 'define_cancel',
+            found: null,
+            value: message.actions[0].name
+          })
+        } catch (e) {
+          console.error(`Analytics error:`, e);
+        }
       } else {
         const acronym = new Acronym({
           title: message.actions[0].name,
@@ -20,7 +36,16 @@ export default adapter => controller => {
             user: message.user,
             overwrite: false
           });
-          bot.replyInteractive(message, 'Thanks! I have saved it.');
+          bot.replyInteractive(message, `:heart: Thanks <@${message.user}>, I saved your definition of ${message.actions[0].name} :raised_hands:`);
+          try {
+            await analytics.save({
+              action: 'define_confirm',
+              found: null,
+              value: message.actions[0].name
+            })
+          } catch (e) {
+            console.error(`Analytics error:`, e);
+          }
         } catch(e) {
           bot.replyInteractive(message, e.message);
         }
@@ -29,10 +54,18 @@ export default adapter => controller => {
     else if (message.callback_id === "remove_acronym") {
 
       if (message.actions[0].value === "no") {
-          bot.replyInteractive(message, ":ok_hand: I won't delete anything");
+          bot.replyInteractive(message, `:ok_hand: <@${message.user}> I won't delete anything :relaxed:`);
+          try {
+          await analytics.save({
+            action: 'remove_cancel',
+            found: null,
+            value: message.actions[0].name
+          })
+        } catch (e) {
+          console.error(`Analytics error:`, e);
+        }
       } else if (message.actions[0].value === "yes") {
         try {
-          
           const acronym = new Acronym({
             title: message.actions[0].name,
             teamId: bot.team_info.id,
@@ -42,7 +75,16 @@ export default adapter => controller => {
           await acronym.delete({
             user: message.user
           });
-          bot.replyInteractive(message, `Thanks <@${message.user}>, I deleted your definition of ${message.actions[0].name}`);
+          bot.replyInteractive(message, `:+1: Thanks <@${message.user}>, I deleted your definition of ${message.actions[0].name} :v:`);
+          try {
+            await analytics.save({
+              action: 'remove_confirm',
+              found: null,
+              value: message.actions[0].name
+            })
+          } catch (e) {
+            console.error(`Analytics error:`, e);
+          }
         } catch(e) {
           bot.replyInteractive(message, e.message);
         }
@@ -52,8 +94,17 @@ export default adapter => controller => {
       if (message.actions[0].value === 'no') {
         bot.replyInteractive(
           message,
-          ':ok_hand: once you figure it out, let me know'
+          `:ok_hand: no worries <@${message.user}>, once you figure it out, please let me know :the_horns:`
         );
+        try {
+          await analytics.save({
+            action: 'update_cancel',
+            found: null,
+            value: message.actions[0].name
+          })
+        } catch (e) {
+          console.error(`Analytics error:`, e);
+        }
       } else {
         const acronym = new Acronym({
           title: message.actions[0].name,
@@ -66,7 +117,16 @@ export default adapter => controller => {
             user: message.user,
             overwrite: true
           });
-          bot.replyInteractive(message, 'Thanks! I have saved it.');
+          bot.replyInteractive(message, `:i_love_you_hand_sign: Thanks <@${message.user}>, I updated your definition of ${message.actions[0].name} :v:`);
+          try {
+            await analytics.save({
+              action: 'update_confirm',
+              found: null,
+              value: message.actions[0].name
+            })
+          } catch (e) {
+            console.error(`Analytics error:`, e);
+          }
         } catch(e) {
           bot.replyInteractive(message, e.message);
         }

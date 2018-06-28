@@ -1,7 +1,8 @@
 import util from 'util';
 import Acronym from '../models/Acronym';
+import Analytics from '../models/Analytics';
 
-export default adapter => controller => {
+export default analytics_adapter => adapter => controller => {
   controller.hears(
     [
       /what(?:[^\w]|\si)s the meaning of ([\w\.]+)\b/,
@@ -16,6 +17,10 @@ export default adapter => controller => {
         teamId: bot.team_info.id,
         adapter
       });
+      const analytics = new Analytics({
+        adapter: analytics_adapter,
+        message
+      });
       try {
         const acronymData = await acronym.read();
         const msgs = await Promise.all(
@@ -29,8 +34,29 @@ export default adapter => controller => {
           message,
           formattedMsg
         );
+
+        // analytics - found result
+        try {
+          await analytics.save({
+            action: 'question',
+            found: true
+          })
+        } catch (e) {
+          console.error(`Analytics error:`, e);
+        }
+        
       } catch (e) {
         bot.reply(message, e.message);
+
+        // analytics - no result
+        try {
+          await analytics.save({
+            action: 'question',
+            found: false
+          })
+        } catch (e) {
+          console.error(`Analytics error:`, e);
+        }
       }
     }
   );

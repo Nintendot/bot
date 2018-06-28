@@ -7,11 +7,15 @@ import listenForDefinition from './listenForDefinition';
 import listenForDeletion from './listenForDeletion';
 import listenForQuestion from './listenForQuestion';
 import listenForUpdate from './listenForUpdate';
+import listenForSlash from './listenForSlash';
 
+//import Bigquery from '../analyticsAdapters/BigQuery';
+import localAnalytics from '../analyticsAdapters/localAnalytics';
 import localDBAdapter from '../storageAdapters/localDBAdapter';
 
 export default (controller) => {
   const adapter = new localDBAdapter(controller.storage.teams)
+  const analytics_adapter = new localAnalytics();
   // const web = new WebClient(process.env.slackToken);
 
   var listening = new Set();
@@ -22,12 +26,14 @@ export default (controller) => {
 
 
   // Listening
-  listenForUpdate(adapter)(controller);
+  listenForUpdate(analytics_adapter)(controller);
   listenForActions(controller, listening);
-  listenForAmbient(adapter)(controller);
-  listenForDefinition(controller);
-  listenForDeletion(adapter)(controller);
-  listenForQuestion(adapter)(controller);
+  listenForAmbient(analytics_adapter)(adapter)(controller);
+  listenForDefinition(analytics_adapter)(controller);
+  listenForDeletion(analytics_adapter)(controller);
+  listenForQuestion(analytics_adapter)(adapter)(controller);
+  // Listening - Slash Command
+  listenForSlash(analytics_adapter)(controller);
   // Interactive msg
-  interactiveMsgCallback(adapter)(controller);
+  interactiveMsgCallback(analytics_adapter)(adapter)(controller);
 };

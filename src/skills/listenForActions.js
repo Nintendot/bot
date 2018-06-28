@@ -13,12 +13,12 @@ export default (controller, listening) => {
             console.log(`user ${user} requested to enable listening on channel ID: ${channel}`);
             listening.add(channel);
             controller.storage.channels.save({ id: channel, listen: true });  
-            bot.reply(message, `Alright <@${user}>, I will start to listen in <#${channel}> now.`);
+            bot.reply(message, `:ok_hand: <@${user}>, I will start to listen in this channel now :ear:`);
           } else if (request == 'stop') {
             console.log(`user ${user} requested to disable listening on channel ID: ${channel}`);
             listening.delete(channel);
             controller.storage.channels.save({ id: channel, listen: false });
-              bot.reply(message, `Alright <@${user}>, I will stop listening in <#${channel}>.`);
+              bot.reply(message, `:ok_hand: <@${user}>, I will stop listening in channel :face_with_hand_over_mouth:`);
           } else if (request == 'are you') {
             controller.storage.teams.all((err, allteam_data) => {
               if (err) {
