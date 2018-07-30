@@ -11,7 +11,7 @@ import listenForSlash from './listenForSlash';
 
 //import Bigquery from '../analyticsAdapters/BigQuery';
 import localAnalytics from '../analyticsAdapters/localAnalytics';
-import localDBAdapter from '../storageAdapters/localDBAdapter';
+// import localDBAdapter from '../storageAdapters/localDBAdapter';
 import bigQueryAdapter from '../storageAdapters/bigQueryAdapter';
 
 export default (controller) => {
@@ -35,7 +35,7 @@ export default (controller) => {
   listenForDeletion(analytics_adapter)(controller);
   listenForQuestion(analytics_adapter)(adapter)(controller);
   // Listening - Slash Command
-  listenForSlash(analytics_adapter)(controller);
+  listenForSlash(controller);
   // Interactive msg
   interactiveMsgCallback(analytics_adapter)(adapter)(controller);
 };

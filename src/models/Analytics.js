@@ -25,7 +25,7 @@ export default class Analytics {
         ts = moment.unix(this.message.action_ts.split('.')[0]).format("YYYY-MM-DD hh:mm:ss");
       } else {
         ts = '1900-00-00 00:00:00'; // default to a valid ts for db schema
-        console.log("Cannot find timestamp in message object, which was: ", message);
+        console.log("Cannot find timestamp in message object, which was: ", this.message);
         console.log("The action was: ", action);
         console.log("The acronym was: ", value);
       }
