@@ -12,9 +12,11 @@ import listenForSlash from './listenForSlash';
 //import Bigquery from '../analyticsAdapters/BigQuery';
 import localAnalytics from '../analyticsAdapters/localAnalytics';
 import localDBAdapter from '../storageAdapters/localDBAdapter';
+import bigQueryAdapter from '../storageAdapters/bigQueryAdapter';
 
 export default (controller) => {
-  const adapter = new localDBAdapter(controller.storage.teams)
+  const adapter = new bigQueryAdapter(controller.storage.teams)
+  // const adapter = new localDBAdapter(controller.storage.teams)
   const analytics_adapter = new localAnalytics();
   // const web = new WebClient(process.env.slackToken);
 
