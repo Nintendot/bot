@@ -45,7 +45,7 @@ export default class bigQueryAdapter {
         .then(results => {
             if(results[0].length > 0) { // use update instead
                 throw new Error(
-                    `Hi <@${user}>, It seems like you have already defined \`${title}\`.` + '\n' + `Please use the update command to update the value.` + '\n' + `For details, check out \`\`\`/@Botcronym help\`\`\``
+                    `Hi <@${user}>, It seems like you have already defined \`${title}\`.` + '\n' + `Please use the update command to modify its meaning:` + '\n' + `\`\`\`@Botcronym update ${title} to (new definition)\`\`\`` + '\n' + `For detail syntax, check out \`\`\`/@Botcronym help\`\`\``
                 );
             } else { // save
                 const save = `insert into \`${teamId}.acronyms\` (acronym, creator, definition) values ('${title}', '${user}', '${value}')`;
@@ -69,7 +69,14 @@ export default class bigQueryAdapter {
         return await this.bigquery
         .query(updateOptions)
         .then(results => {
-            return results[0];
+            if (results[0].length == 0) {
+                throw new Error(
+                    `Hi <@${user}>, Doesn't look like you have defined \`${title}\` previously.` + '\n' + `Please use the define command to explain this acronym:` + '\n' + `\`\`\`@Botcronym ${title} means (definition)\`\`\`` + '\n' + `For detail syntax, check out \`\`\`/@Botcronym help\`\`\``
+                );
+            }
+            else {
+                return results[0];
+            }
         })// Error will be caught and handled in outer stack
     }
   }
@@ -100,6 +107,4 @@ export default class bigQueryAdapter {
             }
         })// Error will be caught and handled in outer stack
     }
-    
-
 }
