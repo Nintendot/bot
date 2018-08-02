@@ -4,7 +4,7 @@ import Analytics from '../models/Analytics';
 export default analytics_adapter => controller => {
   controller.hears(
     [
-      /(?:\W)?([A-Za-z0-9\.]+)(?:\W)? (?:means|stands for) (?:\W)?(.+?)(?:\W)?$/
+      /(?:\W)?([A-Za-z0-9\.]+)(?:\W)? (?:means|stands for) (.+)$/
     ],
     ['direct_message', 'mention', 'direct_mention'],
     async (bot, message) => {
