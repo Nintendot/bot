@@ -4,8 +4,8 @@ import Analytics from '../models/Analytics';
 export default analytics_adapter => controller => {
   controller.hears(
     [
-      /update (?:\W)?([A-Za-z0-9\.]+)(?:\W)? (?:to|with) (?:\W)?(.+?)(?:\W)?$/,
-      /replace (?:\W)?([A-Za-z0-9\.]+)(?:\W)? with (?:\W)?(.+?)(?:\W)?$/
+      /update (?:\W)?([A-Za-z0-9\.]+)(?:\W)? (?:to|with) (.+)$/,
+      /replace (?:\W)?([A-Za-z0-9\.]+)(?:\W)? with (.+)$/
     ],
     ['direct_message', 'mention', 'direct_mention'],
     async (bot, message) => {
