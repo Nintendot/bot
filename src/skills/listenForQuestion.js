@@ -5,9 +5,9 @@ import Analytics from '../models/Analytics';
 export default analytics_adapter => adapter => controller => {
   controller.hears(
     [
-      /what(?:[^\w]|\si)s the meaning of ([\w\.]+)\b/,
-      /what(?:[^\w]|\si)s ([\w\.]+)\b/,
-      /what does (.+) (?:mean|stand for)\b/
+      /what(?:[^\w]|\si)s the meaning of ([\w\.]+)\b/i,
+      /what(?:[^\w]|\si)s ([\w\.]+)\b/i,
+      /what does (.+) (?:mean|stand for)\b/i
     ],
     ['direct_message', 'mention', 'direct_mention'],
     async (bot, message) => {
@@ -29,7 +29,7 @@ export default analytics_adapter => adapter => controller => {
             return Object.assign({}, item, {creator: user.name});
           })
         );
-        const formattedMsg = `Here are the results I found on acronym \`${message.match[1].toUpperCase()}\`:\n` + msgs.map(m => `_${m.definition}_ by <@${m.creator}>`).join('\n');
+        const formattedMsg = `Here are the results I found on acronym \`${message.match[1].toUpperCase()}\`:\n` + msgs.map(m => `${m.definition} by <@${m.creator}>`).join('\n');
         bot.reply(
           message,
           formattedMsg
