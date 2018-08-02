@@ -11,6 +11,7 @@ export default analytics_adapter => adapter => controller => {
     ],
     ['direct_message', 'mention', 'direct_mention'],
     async (bot, message) => {
+      bot.reply(message, `:ok_hand:, give me a second while I look up ${message.match[1]} :hourglass:`);
       const getUser = util.promisify(bot.api.users.info);
       const acronym = new Acronym({
         title: message.match[1],
