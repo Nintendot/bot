@@ -1,6 +1,6 @@
 import Analytics from '../models/Analytics';
 
-export default analytics_adapter => controller => {
+export default controller => {
   controller.on("slash_command", async (bot, message) => {
     const BOTCRONYM_CMD = "/botcronym";
     const BOTCRONYM_HELP = "help";
@@ -54,20 +54,6 @@ export default analytics_adapter => controller => {
               }
 
             bot.replyPrivate(message, refinedMsg);
-
-            const analytics = new Analytics({
-                adapter: analytics_adapter,
-                message
-              });
-              try {
-                await analytics.save({
-                  action: 'help',
-                  found: null,
-                  value: 'slash_help'
-                })
-              } catch (e) {
-                console.error(`Analytics error:`, e);
-              }
         } else {
             bot.replyPrivate(
             message,

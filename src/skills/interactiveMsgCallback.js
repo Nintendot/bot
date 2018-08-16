@@ -25,6 +25,8 @@ export default analytics_adapter => adapter => controller => {
           console.error(`Analytics error:`, e);
         }
       } else {
+        // Prompt a message first to prevent spamming the interactive button
+        bot.replyInteractive(message, `:ok_hand:, give me a second while I try to save it :floppy_disk:`);
         const acronym = new Acronym({
           title: message.actions[0].name,
           teamId: bot.team_info.id,
@@ -65,6 +67,8 @@ export default analytics_adapter => adapter => controller => {
           console.error(`Analytics error:`, e);
         }
       } else if (message.actions[0].value === "yes") {
+        // Prompt a message first to prevent spamming the interactive button
+        bot.replyInteractive(message, `:ok_hand:, give me a second while I work on it :crossed_fingers:`);
         try {
           const acronym = new Acronym({
             title: message.actions[0].name,
@@ -106,6 +110,7 @@ export default analytics_adapter => adapter => controller => {
           console.error(`Analytics error:`, e);
         }
       } else {
+        bot.replyInteractive(message, `:ok_hand:, give me a second while I try to update it :construction:`);
         const acronym = new Acronym({
           title: message.actions[0].name,
           teamId: bot.team_info.id,
