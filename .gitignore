@@ -7,4 +7,4 @@ yarn.lock
 todos.md
 lib
 .env
-src/analyticsAdapters/gcp_env.js
+src/analyticsAdapters/analyticsEnv.js
