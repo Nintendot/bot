@@ -1,0 +1,5 @@
+cron:
+  - description: "Load analytics and reset local file"
+    url: /analytics/receive
+    schedule: every day 05:30
+    timezone: America/Toronto
